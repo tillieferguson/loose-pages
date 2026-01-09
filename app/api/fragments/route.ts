@@ -1,30 +1,31 @@
-interface Fragment {
-  id: number;
-  text: string;
-}
+import { sql } from "@vercel/postgres";
 
-let fragments: Fragment[] = [];
+export const runtime = "nodejs";
 
 export async function GET() {
-  return Response.json({ fragments: [...fragments].reverse() });
+  const { rows } = await sql`
+    select id, text, location, created_at
+    from fragments
+    order by created_at desc, id desc
+  `;
+  return Response.json({ fragments: rows });
 }
 
 export async function POST(req: Request) {
-  const { text } = await req.json();
+  const { text, location } = await req.json();
 
   if (!text || !text.trim()) {
     return new Response(JSON.stringify({ error: "Missing text" }), {
       status: 400,
     });
   }
-
-  const fragment: Fragment = {
-    id: Date.now(),
-    text: text.trim(),
-  };
-
-  fragments.push(fragment);
-
-  return Response.json({ fragment }, { status: 201 });
+  const trimmed = text.trim();
+  const trimmedLocation =
+    typeof location === "string" && location.trim() ? location.trim() : null;
+  const { rows } = await sql`
+    insert into fragments (text, location)
+    values (${trimmed}, ${trimmedLocation})
+    returning id, text, location, created_at
+  `;
+  return Response.json({ fragment: rows[0] }, { status: 201 });
 }
-
