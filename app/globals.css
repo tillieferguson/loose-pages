@@ -185,6 +185,19 @@ body::before {
   gap: 12px;
 }
 
+.lp-input {
+  width: 100%;
+  border: 2px solid #111;
+  background: #fbf7ec;
+  padding: 10px;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 14px;
+}
+
+.lp-input::placeholder {
+  color: #867e70;
+}
+
 .lp-textarea {
   width: 100%;
   border: 2px solid #111;
@@ -241,4 +254,3 @@ body::before {
     font-size: 20px;
   }
 }
-

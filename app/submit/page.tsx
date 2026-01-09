@@ -6,6 +6,7 @@ import "../globals.css";
 
 export default function SubmitPage() {
   const [text, setText] = useState("");
+  const [location, setLocation] = useState("");
   const [status, setStatus] = useState("");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -22,7 +23,7 @@ export default function SubmitPage() {
       const res = await fetch("/api/fragments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: trimmed }),
+        body: JSON.stringify({ text: trimmed, location }),
       });
 
       if (!res.ok) {
@@ -31,6 +32,7 @@ export default function SubmitPage() {
       }
 
       setText("");
+      setLocation("");
       setStatus("Fragment saved. Thank you. ✶");
     } catch {
       setStatus("Network error. Try again.");
@@ -45,6 +47,13 @@ export default function SubmitPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="lp-card lp-form-card">
+        <input
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="lp-input"
+          type="text"
+          placeholder="Neighborhood or city (optional)"
+        />
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -66,4 +75,3 @@ export default function SubmitPage() {
     </main>
   );
 }
-

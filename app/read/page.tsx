@@ -7,6 +7,7 @@ import "../globals.css";
 interface Fragment {
   id: number;
   text: string;
+  location?: string | null;
 }
 
 export default function ReadPage() {
@@ -38,7 +39,12 @@ export default function ReadPage() {
 
       <section className="lp-card lp-fragment-card">
         {current ? (
-          <p className="lp-fragment-text">{current.text}</p>
+          <>
+            <p className="lp-fragment-text">{current.text}</p>
+            {current.location ? (
+              <p className="lp-fragment-text muted">— {current.location}</p>
+            ) : null}
+          </>
         ) : (
           <p className="lp-fragment-text muted">
             No fragments yet. Maybe you should leave the first one.
@@ -64,4 +70,3 @@ export default function ReadPage() {
     </main>
   );
 }
-
